@@ -1,12 +1,15 @@
-if __name__ == '__main__':
+import os.path
+
+
+test_folder = os.path.abspath(f'{__file__}/..')
+
+
+def compile_main_contract() -> str:
     import json
-    import os.path
 
     import compile
 
-    test_folder = os.path.abspath(f'{__file__}/..')
     setup_folder = f'{test_folder}/neo-express'
-
     try:
         compile.compile()
 
@@ -16,18 +19,35 @@ if __name__ == '__main__':
 
         with open(compile.contract_out.replace('.nef', '.manifest.json')) as manifest_output:
             manifest = json.loads(manifest_output.read())  # to shorten the json string
+            contract_name = manifest['name']
             manifest = json.dumps(manifest, separators=(',', ':'))
 
-        with open(f'{setup_folder}/deploy_args.txt', 'wb+') as deploy_args:
-            from boa3_test.test_drive.testrunner import utils
-
-            args = [
-                utils.value_to_parameter(nef),
-                utils.value_to_parameter(manifest)
+        from boa3_test.test_drive.testrunner import utils
+        args = [
+            utils.value_to_parameter(nef),
+            utils.value_to_parameter(manifest),
+            [  # test data
+                '0x2FC11419B09ACD6DD2ADD94262C523E12022F567ECA29334A86F071ECE5E8557',
+                '0x02E014F3EEF6368723B3FCE4C5228B000C6B4D8F7C1BC8FBEFBA53691EB33279C1'
             ]
+        ]
 
-            deploy_args.write(bytes(json.dumps(args, indent=4), 'utf-8'))
+        deploy_file_path = f'{setup_folder}/deploy.neo-invoke.json'
+        with open(deploy_file_path, 'r') as deploy_file:
+            deploy_invoke = json.loads(deploy_file.read())
+            deploy_invoke[0]['args'] = args
 
+        with open(deploy_file_path, 'wb+') as deploy_file:
+            deploy_file.write(bytes(json.dumps(deploy_invoke, indent=2) + '\n', 'utf-8'))
+
+        return contract_name
+
+    except BaseException as e:
+        raise e
+
+
+def compile_test_contract():
+    try:
         # this WILL fail if cpm is not executed
         from boa3.boa3 import Boa3
 
@@ -38,3 +58,8 @@ if __name__ == '__main__':
 
     except BaseException as e:
         raise e
+
+
+if __name__ == '__main__':
+    compile_main_contract()
+    compile_test_contract()

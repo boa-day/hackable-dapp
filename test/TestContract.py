@@ -1,4 +1,5 @@
 from boa3.builtin.compile_time import public, metadata, NeoMetadata
+from boa3.builtin.type import UInt160
 
 from cpm_out.HappyBoaDay.contract import HappyBoaDay
 
@@ -9,8 +10,8 @@ def set_title_and_style(title: str, style: str):
 
 
 @public(name='callGrandPrize')
-def grand_prize():
-    HappyBoaDay.grand_prize()
+def grand_prize(receiver: UInt160):
+    HappyBoaDay.grand_prize(receiver)
 
 
 @public(name='getGrandPrizeValueInGas')

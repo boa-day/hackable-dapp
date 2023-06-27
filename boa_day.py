@@ -2,8 +2,9 @@ from typing import Any, cast
 
 from boa3.builtin.compile_time import metadata, public, NeoMetadata
 from boa3.builtin.contract import abort
-from boa3.builtin.interop import runtime, storage
+from boa3.builtin.interop import runtime, storage, blockchain
 from boa3.builtin.interop.blockchain import Transaction
+from boa3.builtin.interop.contract import Contract
 from boa3.builtin.nativecontract.contractmanagement import ContractManagement
 from boa3.builtin.nativecontract.gas import GAS
 from boa3.builtin.nativecontract.stdlib import StdLib
@@ -65,7 +66,7 @@ def set_title_and_style(title: str, style: str):
 
 
 @public(name='grandPrize')
-def try_to_hack_me():
+def try_to_hack_me(receiver: UInt160):
     if not is_called_by_boa_contract():
         raise Exception('Not using Neo3-Boa.')
 
@@ -75,7 +76,10 @@ def try_to_hack_me():
     if not has_prize():
         raise Exception('Someone was faster and already got the prize.')
 
-    success = give_prize()
+    if not isinstance(receiver, UInt160):
+        raise Exception('Incorrect argument type.')
+
+    success = give_prize(receiver)
     if not success:
         raise Exception('Something went wrong with the prize.')
 
@@ -96,7 +100,15 @@ def on_nep17_payment(from_address: UInt160, amount: int, data: Any):
 
 
 def is_called_by_boa_contract() -> bool:
-    return False
+    contract_hash = runtime.calling_script_hash
+
+    calling: Contract = blockchain.get_contract(contract_hash)
+    if calling is None:
+        return False
+
+    contract_nef = calling.nef
+    compiler = type_helper.to_str(contract_nef[4:68])
+    return compiler.startswith('neo3-boa by COZ-1.0.0')
 
 
 def get_title() -> str:
@@ -167,7 +179,5 @@ def set_prize_amount(prize_amount: int):
         storage.put(b'\x00\x06', prize_amount)
 
 
-def give_prize() -> bool:
-    container: Transaction = runtime.script_container
-
-    return GAS.transfer(runtime.executing_script_hash, container.sender, get_prize_amount())
+def give_prize(receiver: UInt160) -> bool:
+    return GAS.transfer(runtime.executing_script_hash, receiver, get_prize_amount())

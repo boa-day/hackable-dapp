@@ -8,14 +8,77 @@
             "name": "Get Title and Style",
             "type": "neo-contract",
             "request": "launch",
-            "checkpoint": "${workspaceFolder}/test/neo-express/deployed.neoxp-checkpoint",
+            "checkpoint": "${workspaceFolder}/test/neo-express/contract-deployed.neoxp-checkpoint",
             "neo-express": "${workspaceFolder}/default.neo-express",
             "program": "${workspaceFolder}/boa_day.nef",
+            "signers": [],
             "invocation": {
                 "operation": "getTitleAndStyle",
                 "args": []
             },
             "storage": []
-        }
+        },
+        {
+            "name": "Change Title and Style",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/contract-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/boa_day.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "setTitleAndStyle",
+                "args": ["NEW TITLE!!!!", "text-align: right;"]
+            },
+            "storage": []
+        },
+        {
+            "name": "Change Title and Style from Contract",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/test-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/test/test_contract.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "changeTitleAndStyle",
+                "args": ["NEW TITLE!!!!", "text-align: right;"]
+            },
+            "stored-contracts": [
+                "${workspaceFolder}/boa_day.nef"
+            ],
+            "storage": []
+        },
+        {
+            "name": "Get Grand Prize",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/contract-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/boa_day.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "grandPrize",
+                "args": ["@user"]
+            },
+            "storage": []
+        },
+        {
+            "name": "Get Grand Prize from Contract",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/test-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/test/test_contract.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "callGrandPrize",
+                "args": ["@user"]
+            },
+            "stored-contracts": [
+                "${workspaceFolder}/boa_day.nef"
+            ],
+            "storage": []
+        },
     ]
 }

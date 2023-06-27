@@ -1,0 +1,3 @@
+transfer 15 GAS genesis user
+contract deploy ../test_contract.nef user
+checkpoint create --force test-deployed.neoxp-checkpoint
