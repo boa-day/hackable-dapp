@@ -1,0 +1,12 @@
+.idea
+.vscode
+venv
+__pycache__
+
+*.nef
+*.manifest.json
+*.nefdbgnfo
+*.neoxp-checkpoint
+
+cpm_out
+/test/neo-express/deploy_args.txt

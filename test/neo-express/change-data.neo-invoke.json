@@ -1,0 +1,17 @@
+[
+  {
+    "contract":"HappyBoaDay",
+    "operation":"getTitleAndStyle",
+    "args":[]
+  },
+  {
+    "contract":"TestContract",
+    "operation":"changeTitleAndStyle",
+    "args":["I will change everything", "text-align: right;"]
+  },
+  {
+    "contract":"HappyBoaDay",
+    "operation":"getTitleAndStyle",
+    "args":[]
+  }
+]

@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Get Title and Style",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/boa_day.nef",
+            "invocation": {
+                "operation": "getTitleAndStyle",
+                "args": []
+            },
+            "storage": []
+        }
+    ]
+}
