@@ -1,6 +1,6 @@
 [
   {
-    "contract":"HappyBoaDay",
+    "contract":"HackableDApp",
     "operation":"getGrandPrizeValueInGas",
     "args":[]
   },

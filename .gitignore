@@ -9,4 +9,3 @@ __pycache__
 *.neoxp-checkpoint
 
 cpm_out
-/test/neo-express/deploy_args.txt

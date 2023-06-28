@@ -18,8 +18,8 @@ defaults:
 contracts:
     # Label can be anything that allows you to identify which contract this is 
     # (assuming you can't remember all contract hashes by heart)
-  - label: Boa Day
-    script-hash: '0xf4e08a07ba068c540093a654515623ef0c37a30f'
+  - label: Boa Day Hackable DApp
+    script-hash: '0x3469abd50f2a62c81ad2694f55fedc1784dc9886'
 
 # which tools are available for contract downloading and/or generating SDKs
 tools:

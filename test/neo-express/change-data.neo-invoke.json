@@ -1,6 +1,6 @@
 [
   {
-    "contract":"HappyBoaDay",
+    "contract":"HackableDApp",
     "operation":"getTitleAndStyle",
     "args":[]
   },
@@ -10,7 +10,7 @@
     "args":["I will change everything!!!", "text-align: right;"]
   },
   {
-    "contract":"HappyBoaDay",
+    "contract":"HackableDApp",
     "operation":"getTitleAndStyle",
     "args":[]
   }

@@ -110,6 +110,20 @@
                 "${workspaceFolder}/boa_day.nef"
             ],
             "storage": []
+        },
+        {
+            "name": "Get Total Supply",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/contract-retrieved.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/boa_day.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "totalSupply",
+                "args": []
+            },
+            "storage": []
         }
     ]
 }

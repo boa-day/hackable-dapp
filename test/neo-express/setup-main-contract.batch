@@ -1,4 +1,4 @@
 transfer 15 GAS genesis deployer
 contract invoke deploy.neo-invoke.json deployer
-transfer 105 GAS genesis #HappyBoaDay
+transfer 100 GAS genesis #HackableDApp
 checkpoint create --force contract-deployed.neoxp-checkpoint
