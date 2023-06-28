@@ -22,20 +22,14 @@ def compile_main_contract() -> str:
             contract_name = manifest['name']
             manifest = json.dumps(manifest, separators=(',', ':'))
 
-        from boa3_test.test_drive.testrunner import utils
-        args = [
-            utils.value_to_parameter(nef),
-            utils.value_to_parameter(manifest),
-            [  # test data
-                '0x2FC11419B09ACD6DD2ADD94262C523E12022F567ECA29334A86F071ECE5E8557',
-                '0x02E014F3EEF6368723B3FCE4C5228B000C6B4D8F7C1BC8FBEFBA53691EB33279C1'
-            ]
-        ]
-
         deploy_file_path = f'{setup_folder}/deploy.neo-invoke.json'
         with open(deploy_file_path, 'r') as deploy_file:
             deploy_invoke = json.loads(deploy_file.read())
-            deploy_invoke[0]['args'] = args
+            args_on_file = deploy_invoke[0]['args']
+
+            from boa3_test.test_drive.testrunner import utils
+            args_on_file[0] = utils.value_to_parameter(nef)
+            args_on_file[1] = utils.value_to_parameter(manifest)
 
         with open(deploy_file_path, 'wb+') as deploy_file:
             deploy_file.write(bytes(json.dumps(deploy_invoke, indent=2) + '\n', 'utf-8'))
@@ -51,7 +45,7 @@ def compile_test_contract():
         # this WILL fail if cpm is not executed
         from boa3.boa3 import Boa3
 
-        Boa3.compile_and_save(path=f'{test_folder}/TestContract.py',
+        Boa3.compile_and_save(path=f'{test_folder}/test_contract.py',
                               output_path=f'{test_folder}/test_contract.nef',
                               root_folder=test_folder,
                               debug=True)

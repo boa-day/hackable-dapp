@@ -80,5 +80,36 @@
             ],
             "storage": []
         },
+        {
+            "name": "Get Grand Prize Amount",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/contract-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/boa_day.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "getGrandPrizeValueInGas",
+                "args": []
+            },
+            "storage": []
+        },
+        {
+            "name": "Get Grand Prize Amount from Contract",
+            "type": "neo-contract",
+            "request": "launch",
+            "checkpoint": "${workspaceFolder}/test/neo-express/test-deployed.neoxp-checkpoint",
+            "neo-express": "${workspaceFolder}/default.neo-express",
+            "program": "${workspaceFolder}/test/test_contract.nef",
+            "signers": [],
+            "invocation": {
+                "operation": "getGrandPrizeValueInGas",
+                "args": []
+            },
+            "stored-contracts": [
+                "${workspaceFolder}/boa_day.nef"
+            ],
+            "storage": []
+        }
     ]
 }

@@ -12,6 +12,6 @@
   {
     "contract":"TestContract",
     "operation":"callGrandPrize",
-    "args":[]
+    "args":["@user"]
   }
 ]

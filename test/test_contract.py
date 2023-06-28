@@ -4,6 +4,16 @@ from boa3.builtin.type import UInt160
 from cpm_out.HappyBoaDay.contract import HappyBoaDay
 
 
+@metadata
+def metadata_func() -> NeoMetadata:
+    meta = NeoMetadata()
+
+    meta.name = 'TestContract'
+    meta.add_permission(contract=HappyBoaDay.hash)
+
+    return meta
+
+
 @public(name='changeTitleAndStyle')
 def set_title_and_style(title: str, style: str):
     HappyBoaDay.set_title_and_style(title, style)

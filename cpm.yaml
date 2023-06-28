@@ -19,7 +19,7 @@ contracts:
     # Label can be anything that allows you to identify which contract this is 
     # (assuming you can't remember all contract hashes by heart)
   - label: Boa Day
-    script-hash: '0x35998bab9667790c8f29367fffe683b2101167c6'
+    script-hash: '0xf4e08a07ba068c540093a654515623ef0c37a30f'
 
 # which tools are available for contract downloading and/or generating SDKs
 tools:

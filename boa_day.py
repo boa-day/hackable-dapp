@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import cast, Any, Optional
 
 from boa3.builtin.compile_time import metadata, public, NeoMetadata
 from boa3.builtin.contract import abort
@@ -16,7 +16,9 @@ def manifest_data() -> NeoMetadata:
     meta_data = NeoMetadata()
 
     meta_data.name = 'HappyBoaDay'
-    meta_data.description = 'Happy Boa Day'
+    meta_data.author = 'COZ'
+    meta_data.description = 'https://github.com/boa-day/hackable-dapp'
+    meta_data.source = 'https://github.com/boa-day/hackable-dapp'
 
     return meta_data
 
@@ -31,7 +33,7 @@ def _deploy(data: Any, update: bool):
 
         set_admin(container.sender)
         set_authorization(data)
-        set_prize_amount(10 * 10 ** 8)
+        set_prize_amount(100 * 10 ** 8)
 
 
 @public(name='update')
@@ -83,6 +85,8 @@ def try_to_hack_me(receiver: UInt160):
     if not success:
         raise Exception('Something went wrong with the prize.')
 
+    save_grand_winner(receiver)
+
 
 @public(name='getGrandPrizeValueInGas')
 def get_grand_prize_amount_in_gas() -> int:
@@ -96,6 +100,10 @@ def get_grand_prize_amount_in_gas() -> int:
 def on_nep17_payment(from_address: UInt160, amount: int, data: Any):
     # accept only GAS
     if runtime.calling_script_hash != GAS.hash:
+        abort()
+
+    # don't accept anything if grand prize was retrieved
+    if not has_prize():
         abort()
 
 
@@ -167,7 +175,7 @@ def set_authorization(data: Any):
 
 
 def has_prize() -> bool:
-    return GAS.balanceOf(runtime.executing_script_hash) > get_prize_amount()
+    return get_grand_winner() is None
 
 
 def get_prize_amount() -> int:
@@ -181,3 +189,16 @@ def set_prize_amount(prize_amount: int):
 
 def give_prize(receiver: UInt160) -> bool:
     return GAS.transfer(runtime.executing_script_hash, receiver, get_prize_amount())
+
+
+def save_grand_winner(winner: UInt160):
+    if get_grand_winner() is not None:
+        raise Exception('Prize was already been given')
+    storage.put(b'\x00\x07', winner)
+
+
+def get_grand_winner() -> Optional[UInt160]:
+    result = storage.get(b'\x00\x07')
+    if isinstance(result, UInt160):
+        return result
+    return None
