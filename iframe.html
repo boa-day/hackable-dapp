@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">
+    <title>Hack me IFRAME</title>
+</head>
+<body></body>
+<script>
+    const MAINNET = {
+        url: "https://mainnet1.neo.coz.io:443",
+        scripthash: "" // TODO: change this to hackable dapp mainnet script hash
+    }
+    
+    const TESTNET = {
+        url: "https://testnet1.neo.coz.io:443",
+        scripthash: "0x31475956f17d9ddccc95eb358a2e12478b15cbee" // TODO: change this to hackable dapp testnet script hash
+    }
+
+    const network = TESTNET
+
+    var raw = JSON.stringify({
+        jsonrpc: "2.0",
+        method: "invokefunction",
+        params: [
+            network.scripthash,
+            "tokensAsArray", // TODO: change this to getTitleAndStyle
+            []
+        ],
+        id: 1
+    });
+
+    var requestOptions = {
+        method: 'POST',
+        body: raw
+    };
+
+    fetch(network.url, requestOptions)
+        .then(response => response.text())
+        .then(raw => {
+            const httpResult = JSON.parse(raw)
+            const resultValue = httpResult.result.stack[0].value // TODO: change this to parse from JSON and get the correct properties
+            document.body.innerHTML = resultValue[0].value
+            document.body.style = "text-align: center; line-height: 100vh;"
+        })
+        .catch(error => console.error('error', error));
+</script>
+</html>
