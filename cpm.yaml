@@ -1,6 +1,6 @@
 # settings that apply to all contracts unless explicitly overridden in the contracts section
 defaults:
-  contract-source-network: priv
+  contract-source-network: testnet
   contract-destination: neo-express
   contract-generate-sdk: true
   # settings related to SDK generation for on chain contracts
@@ -19,7 +19,7 @@ contracts:
     # Label can be anything that allows you to identify which contract this is 
     # (assuming you can't remember all contract hashes by heart)
   - label: Boa Day Hackable DApp
-    script-hash: '0x3469abd50f2a62c81ad2694f55fedc1784dc9886'
+    script-hash: '0x315784489b07bdfb999d44bd8041c9c478b8c226'
 
 # which tools are available for contract downloading and/or generating SDKs
 tools:
