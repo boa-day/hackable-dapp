@@ -9,3 +9,4 @@ __pycache__
 *.neoxp-checkpoint
 
 cpm_out
+/node_modules/
