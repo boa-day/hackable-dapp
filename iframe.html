@@ -7,42 +7,80 @@
 </head>
 <body></body>
 <script>
-    const MAINNET = {
+    function loadContent() {
+      const MAINNET = {
         url: "https://mainnet1.neo.coz.io:443",
         scripthash: "" // TODO: change this to hackable dapp mainnet script hash
-    }
-    
-    const TESTNET = {
+      }
+
+      const TESTNET = {
         url: "https://testnet1.neo.coz.io:443",
-        scripthash: "0x31475956f17d9ddccc95eb358a2e12478b15cbee" // TODO: change this to hackable dapp testnet script hash
-    }
+        scripthash: "0x315784489b07bdfb999d44bd8041c9c478b8c226"
+      }
 
-    const network = TESTNET
+      const network = TESTNET
 
-    var raw = JSON.stringify({
+      const raw = JSON.stringify({
         jsonrpc: "2.0",
         method: "invokefunction",
         params: [
-            network.scripthash,
-            "tokensAsArray", // TODO: change this to getTitleAndStyle
-            []
+          network.scripthash,
+          "getTitleAndStyle",
+          []
         ],
         id: 1
-    });
+      });
 
-    var requestOptions = {
+      const requestOptions = {
         method: 'POST',
         body: raw
-    };
+      };
 
-    fetch(network.url, requestOptions)
+      fetch(network.url, requestOptions)
         .then(response => response.text())
         .then(raw => {
-            const httpResult = JSON.parse(raw)
-            const resultValue = httpResult.result.stack[0].value // TODO: change this to parse from JSON and get the correct properties
-            document.body.innerHTML = resultValue[0].value
-            document.body.style = "text-align: center; line-height: 100vh;"
+          const httpResult = JSON.parse(raw)
+          const base64Value = httpResult.result.stack[0].value
+          const hexValue = base64ToHex(base64Value);
+          const stringValue = hexToString(hexValue);
+          const objectValue = JSON.parse(stringValue);
+          document.body.innerHTML = objectValue.title;
+          document.body.style = objectValue.style;
         })
         .catch(error => console.error('error', error));
+    }
+
+    /**
+     * Converts base64 string to hex string
+     * You can archive the same result using Neon-JS
+     * @param str base64 input
+     * @returns {string} hex output
+     */
+    function base64ToHex(str) {
+      const raw = atob(str);
+      let result = '';
+      for (let i = 0; i < raw.length; i++) {
+        const hex = raw.charCodeAt(i).toString(16);
+        result += (hex.length === 2 ? hex : '0' + hex);
+      }
+      return result.toUpperCase();
+    }
+
+    /**
+     * Converts hex string to string
+     * You can archive the same result using Neon-JS
+     * @param hex input
+     * @returns {string} string output
+     */
+    function hexToString(hex) {
+      let result = '';
+      for (let i = 0; i < hex.length; i += 2) {
+        const charCode = parseInt(hex.substring(i, i + 2), 16);
+        result += String.fromCharCode(charCode);
+      }
+      return result;
+    }
+
+    loadContent();
 </script>
 </html>

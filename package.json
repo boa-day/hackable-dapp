@@ -4,8 +4,7 @@
   "description": "",
   "author": "COZ",
   "scripts": {
-    "deploy": "node --experimental-specifier-resolution=node scripts/deploy.js",
-    "transfer": "node --experimental-specifier-resolution=node scripts/transfer.js"
+    "deploy": "node --experimental-specifier-resolution=node scripts/deploy.js"
   },
   "repository": {
     "type": "git",
