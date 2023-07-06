@@ -35,6 +35,8 @@ def _deploy(data: Any, update: bool):
 
         set_admin(container.sender)
         set_authorization(data)
+    else:
+        set_authorization(data)
 
 
 @public(name='update')

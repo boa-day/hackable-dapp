@@ -35,7 +35,7 @@ const deploy = async () => {
         { type: 'ByteArray', value: nef },
         { type: 'String', value: manifest },
         { type: 'Array', value: [
-          { type: 'ByteArray', value: privateKey },
+          { type: 'String', value: privateKey },
           { type: 'ByteArray', value: account.publicKey }
         ] }
       ]

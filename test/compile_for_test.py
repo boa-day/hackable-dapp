@@ -18,11 +18,12 @@ def compile_main_contract() -> str:
             nef = nef_output.read()
 
         with open(compile.contract_out.replace('.nef', '.manifest.json')) as manifest_output:
-            manifest = json.loads(manifest_output.read())  # to shorten the json string
-            contract_name = manifest['name']
-            manifest = json.dumps(manifest, separators=(',', ':'))
+            manifest_json = json.loads(manifest_output.read())  # to shorten the json string
+            contract_name = manifest_json['name']
+            manifest = json.dumps(manifest_json, separators=(',', ':'))
 
         deploy_file_path = f'{setup_folder}/deploy.neo-invoke.json'
+        update_file_path = f'{setup_folder}/update.neo-invoke.json'
         with open(deploy_file_path, 'r') as deploy_file:
             deploy_invoke = json.loads(deploy_file.read())
             args_on_file = deploy_invoke[0]['args']
@@ -32,6 +33,16 @@ def compile_main_contract() -> str:
             args_on_file[1] = utils.value_to_parameter(manifest)
 
         with open(deploy_file_path, 'wb+') as deploy_file:
+            deploy_file.write(bytes(json.dumps(deploy_invoke, indent=2) + '\n', 'utf-8'))
+
+        manifest_json['extra']['updated'] = True
+        manifest = json.dumps(manifest_json, separators=(',', ':'))
+
+        deploy_invoke[0]['contract'] = contract_name
+        deploy_invoke[0]['operation'] = 'update'
+        args_on_file[1] = utils.value_to_parameter(manifest)
+
+        with open(update_file_path, 'wb+') as deploy_file:
             deploy_file.write(bytes(json.dumps(deploy_invoke, indent=2) + '\n', 'utf-8'))
 
         return contract_name
