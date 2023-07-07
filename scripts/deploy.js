@@ -8,7 +8,7 @@ const deploy = async () => {
   const rpcAddress = network === 'testnet'
     ? NeonInvoker.TESTNET
     : (
-      network === 'testnet'
+      network === 'mainnet'
         ? NeonInvoker.MAINNET
         : network
       );

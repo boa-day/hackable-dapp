@@ -20,6 +20,7 @@ def manifest_data() -> NeoMetadata:
     meta_data.description = 'https://github.com/boa-day/hackable-dapp'
     meta_data.source = 'https://github.com/boa-day/hackable-dapp'
 
+    meta_data.add_permission(methods=['onNEP11Payment'])
     meta_data.supported_standards = ['NEP-11']
 
     return meta_data
@@ -339,7 +340,7 @@ def mint_prize_token(token_owner: UInt160) -> bytes:
     token_properties = {
         'name': 'Certified Hacker',
         'description': 'Winner of Boa Day Hack Competition',
-        'image': 'https://coz.io/hackabledapp.png'
+        'image': 'https://props.coz.io/img/boaday/neo/860833102/hackabledapp.png'
     }
     storage.put(get_token_properties_key(token_id_bytes), StdLib.json_serialize(token_properties))
 
