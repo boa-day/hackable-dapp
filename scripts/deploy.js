@@ -15,10 +15,13 @@ const deploy = async () => {
   if (!rpcAddress) throw new Error('Invalid network. Run this script with either "testnet" or "mainnet" as the first argument. Eg.: npm run deploy testnet');
 
   const privateKey = process.argv[3]
+  const adminKey = process.argv[4]
   let account = null
+  let admin = null
 
   try {
     account = new Neon.wallet.Account(privateKey)
+    admin = new Neon.wallet.Account(adminKey)
   } catch (e) {
     throw new Error('Invalid privatekey. Run this script with the privatekey as the second argument. Eg.: npm run deploy testnet abc123')
   }
@@ -26,7 +29,7 @@ const deploy = async () => {
   const nef = Neon.sc.NEF.fromBuffer(fs.readFileSync(nefPath)).serialize()
   const manifest = fs.readFileSync(nefPath.replace('.nef', '.manifest.json')).toString()
 
-  const invoker = await NeonInvoker.init({ rpcAddress, account })
+  const invoker = await NeonInvoker.init({ rpcAddress, account: admin })
   const resp = await invoker.invokeFunction({
     invocations: [{
       scriptHash: '0xfffdc93764dbaddd97c48f252a53ea4643faa3fd',
