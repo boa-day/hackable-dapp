@@ -7,6 +7,7 @@ __pycache__
 *.manifest.json
 *.nefdbgnfo
 *.neoxp-checkpoint
+/test/test_contract.*
 
 cpm_out
 /node_modules/

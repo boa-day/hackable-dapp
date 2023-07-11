@@ -6,7 +6,6 @@ from boa3.builtin.interop import blockchain, runtime, storage
 from boa3.builtin.interop.contract import call_contract, Contract
 from boa3.builtin.interop.iterator import Iterator
 from boa3.builtin.nativecontract.contractmanagement import ContractManagement
-from boa3.builtin.nativecontract.gas import GAS
 from boa3.builtin.nativecontract.stdlib import StdLib
 from boa3.builtin.type import helper as type_helper, ECPoint, UInt160
 
@@ -36,8 +35,10 @@ def _deploy(data: Any, update: bool):
 
         set_admin(container.sender)
         set_authorization(data)
+        set_give_away(False)
     else:
         set_authorization(data)
+        set_give_away(False)
 
 
 @public(name='update')
@@ -73,8 +74,11 @@ def set_title_and_style(title: str, style: str):
 
 @public(name='grandPrize')
 def try_to_hack_me(receiver: UInt160):
-    if not has_prize():
-        raise Exception('Someone was faster and already got the prize.')
+    if not is_prize_enabled():
+        raise Exception('Prize giving is disabled.')
+
+    if has_prize():
+        raise Exception('Prize has already been taken.')
 
     if not is_called_by_boa_contract():
         raise Exception('Not using Neo3-Boa.')
@@ -89,32 +93,33 @@ def try_to_hack_me(receiver: UInt160):
     if not success:
         raise Exception('Something went wrong with the prize.')
 
-    save_grand_winner(receiver)
-
-
-@public(name='getGrandPrizeValueInGas')
-def get_grand_prize_amount_in_gas() -> int:
-    if not has_prize():
-        raise Exception('Someone was faster and already got the prize.')
-
-    return get_prize_amount()
+    save_contract_winner(receiver)
 
 
 @public(name='onNEP17Payment')
 def on_nep17_payment(from_address: UInt160, amount: int, data: Any):
-    # accept only GAS
-    if runtime.calling_script_hash != GAS.hash:
-        abort()
-
-    # don't accept anything if grand prize was retrieved
-    if not has_prize():
-        abort()
+    # don't accept tokens
+    abort()
 
 
 @public(name='onNEP11Payment')
 def on_nep11_payment(from_address: UInt160, amount: int, token_id: bytes, data: Any):
     # don't accept nfts
     abort()
+
+
+@public(name='enablePrize')
+def enable_prize():
+    if not is_admin():
+        raise Exception('Missing authorization')
+    set_give_away(True)
+
+
+@public(name='disablePrize')
+def disable_prize():
+    if not is_admin():
+        raise Exception('Missing authorization')
+    set_give_away(False)
 
 
 def is_called_by_boa_contract() -> bool:
@@ -186,24 +191,20 @@ def set_authorization(data: Any):
 
 
 def has_prize() -> bool:
-    return get_grand_winner() is None
-
-
-def get_prize_amount() -> int:
-    return GAS.balanceOf(runtime.executing_script_hash)
+    return get_winner_from_contract() is not None
 
 
 def give_prize(receiver: UInt160) -> bool:
-    prize = get_prize_amount()
-    if prize <= 0:
+    prize = is_prize_enabled()
+    if not prize:
         # missing contract configuration
         return False
 
-    success = GAS.transfer(runtime.executing_script_hash, receiver, prize)
-    if success:
-        mint_prize_token(receiver)
+    if has_prize():
+        raise Exception('Prize has already been taken.')
 
-    return success
+    mint_prize_token(receiver)
+    return True
 
 
 def save_grand_winner(winner: UInt160):
@@ -217,6 +218,30 @@ def get_grand_winner() -> Optional[UInt160]:
     if isinstance(result, UInt160):
         return result
     return None
+
+
+def save_contract_winner(winner: UInt160):
+    if get_winner_from_contract() is not None:
+        raise Exception('Prize was already been given')
+
+    contract_hash = runtime.calling_script_hash
+    storage.put(b'\x00\x05' + contract_hash, winner)
+
+
+def get_winner_from_contract() -> Optional[UInt160]:
+    contract_hash = runtime.calling_script_hash
+    result = storage.get(b'\x00\x05' + contract_hash)
+    if isinstance(result, UInt160):
+        return result
+    return None
+
+
+def is_prize_enabled() -> bool:
+    return type_helper.to_bool(storage.get(b'\x00\x06'))
+
+
+def set_give_away(enable: bool):
+    storage.put(b'\x00\x06', enable)
 
 
 TOKEN_SYMBOL = 'HACK'

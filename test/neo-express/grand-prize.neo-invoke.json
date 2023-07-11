@@ -1,15 +1,5 @@
 [
   {
-    "contract":"HackableDApp",
-    "operation":"getGrandPrizeValueInGas",
-    "args":[]
-  },
-  {
-    "contract":"TestContract",
-    "operation":"getGrandPrizeValueInGas",
-    "args":[]
-  },
-  {
     "contract":"TestContract",
     "operation":"callGrandPrize",
     "args":["@user"]

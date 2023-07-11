@@ -1,5 +1,7 @@
 transfer 15 GAS genesis user
 contract deploy ../test_contract.nef user
 checkpoint create --force test-deployed.neoxp-checkpoint
+contract run HackableDApp enablePrize -a deployer
+checkpoint create --force prize-enabled.neoxp-checkpoint
 contract invoke update.neo-invoke.json deployer
 checkpoint create --force contract-updated.neoxp-checkpoint
